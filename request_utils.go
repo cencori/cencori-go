@@ -23,6 +23,25 @@ func handleError(resp *http.Response) error {
 	return &apiErr
 }
 
+// doRequest performs an HTTP request and returns the decoded response.
+// It marshals the request body to JSON, sets required headers including the API key,
+// executes the HTTP request, and decodes the response body into the specified response type.
+//
+// Type parameters:
+//   - Req: the type of the request body
+//   - Resp: the type of the response body
+//
+// Parameters:
+//   - c: the HTTP client configuration containing BaseURL and ApiKey
+//   - ctx: the context for the request
+//   - method: the HTTP method (GET, POST, etc.)
+//   - path: the request path appended to BaseURL
+//   - body: the request body to marshal; if nil, no body is sent
+//
+// Returns:
+//   - a pointer to the decoded response of type Resp
+//   - an error if marshaling, creating, executing the request, or decoding the response fails
+//   - an error if the response status code is not OK (200)
 func doRequest[Req any, Resp any](
 	c *Client,
 	ctx context.Context,

@@ -25,7 +25,10 @@ type Client struct {
 	BaseURL    string
 	httpClient *http.Client
 
-	Chat *ChatService
+	Chat     *ChatService
+	Projects *ProjectsService
+	APIKeys  *APIKeysService
+	Metrics  *MetricsService
 }
 
 type Option func(*ClientOptions)
@@ -52,6 +55,9 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	c.Chat = &ChatService{client: c}
+	c.Projects = &ProjectsService{client: c}
+	c.APIKeys = &APIKeysService{client: c}
+	c.Metrics = &MetricsService{client: c}
 
 	return c, nil
 }

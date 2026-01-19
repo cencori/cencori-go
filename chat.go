@@ -11,15 +11,26 @@ import (
 	"strings"
 )
 
+// ChatService provides methods for managing chat-related operations.
+// It uses a Client to communicate with the chat API endpoints.
 type ChatService struct {
 	client *Client
 }
 
+// Chat sends a chat request to the AI service and returns the response.
+// It disables streaming and makes a synchronous request to the /api/ai/chat endpoint.
+// The context can be used to cancel the request or set a timeout.
+// It returns a ChatResponse on success or an error if the request fails.
 func (s *ChatService) Chat(ctx context.Context, params ChatParams) (*ChatResponse, error) {
 	params.Stream = false
 	return doRequest[ChatParams, ChatResponse](s.client, ctx, "POST", "/api/ai/chat", &params)
 }
 
+// Stream sends a chat request with streaming enabled and returns a channel that receives
+// chat response chunks as they arrive from the server. The stream continues until the server
+// sends a "[DONE]" message or an error occurs. The context can be used to cancel the stream.
+// If the context is cancelled, an error is sent on the channel before it closes.
+// The returned channel will be closed when the stream ends or an error occurs.
 func (s *ChatService) Stream(ctx context.Context, params ChatParams) (<-chan StreamChunk, error) {
 	params.Stream = true
 
