@@ -1,54 +1,25 @@
 package cencori
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
+	"strings"
 )
 
-type ChatParams struct {
-	Messages    []Message `json:"messages"`
-	Model       string    `json:"model"`
-	Temperature *float64  `json:"temperature,omitempty"`
-	MaxTokens   *int      `json:"maxTokens,omitempty"`
-	Stream      bool      `json:"stream"`
-	UserID      *string   `json:"userId,omitempty"`
+type ChatService struct {
+	client *Client
 }
 
-type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-}
-
-type ChatResponse struct {
-	Content      string  `json:"content"`
-	Model        string  `json:"model"`
-	Provider     string  `json:"provider"`
-	Usage        Usage   `json:"usage"`
-	CostUSD      float64 `json:"cost_usd"`
-	FinishReason string  `json:"finish_reason"`
-}
-
-type Usage struct {
-	PromptTokens     int `json:"prompt_tokens"`
-	CompletionTokens int `json:"completion_tokens"`
-	TotalTokens      int `json:"total_tokens"`
-}
-
-type StreamChunk struct {
-	Delta        string `json:"delta"`
-	FinishReason string `json:"finish_reason,omitempty"`
-}
-
-func (c *Client) Chat(ctx context.Context, params ChatParams) (*ChatResponse, error) {
+func (s *ChatService) Create(ctx context.Context, params ChatParams) (*ChatResponse, error) {
 	params.Stream = false
-	return doRequest[ChatParams, ChatResponse](c, ctx, "POST", "/api/ai/chat", &params)
+	return doRequest[ChatParams, ChatResponse](s.client, ctx, "POST", "/api/ai/chat", &params)
 }
 
-func (c *Client) ChatStream(ctx context.Context, params ChatParams) (<-chan StreamChunk, error) {
+func (s *ChatService) Stream(ctx context.Context, params ChatParams) (<-chan StreamChunk, error) {
 	params.Stream = true
 
 	jsonData, err := json.Marshal(params)
@@ -59,7 +30,7 @@ func (c *Client) ChatStream(ctx context.Context, params ChatParams) (<-chan Stre
 	req, err := http.NewRequestWithContext(
 		ctx,
 		"POST",
-		c.BaseURL+"/api/ai/chat",
+		s.client.BaseURL+"/api/ai/chat",
 		bytes.NewReader(jsonData),
 	)
 	if err != nil {
@@ -67,32 +38,17 @@ func (c *Client) ChatStream(ctx context.Context, params ChatParams) (<-chan Stre
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("CENCORI_API_KEY", c.ApiKey)
+	req.Header.Set("CENCORI_API_KEY", s.client.ApiKey)
+	req.Header.Set("Accept", "text/event-stream")
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := s.client.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, &APIError{
-				StatusCode: resp.StatusCode,
-				Code:       "READ_ERROR",
-				Message:    fmt.Sprintf("failed to read response body: %v", err),
-			}
-		}
-		var apiErr APIError
-		if err := json.Unmarshal(body, &apiErr); err != nil {
-			return nil, &APIError{
-				StatusCode: resp.StatusCode,
-				Code:       "UNKNOWN",
-				Message:    string(body),
-			}
-		}
-		apiErr.StatusCode = resp.StatusCode
-		return nil, &apiErr
+		defer resp.Body.Close()
+		return nil, handleError(resp)
 	}
 
 	chunks := make(chan StreamChunk)
@@ -101,20 +57,37 @@ func (c *Client) ChatStream(ctx context.Context, params ChatParams) (<-chan Stre
 		defer close(chunks)
 		defer resp.Body.Close()
 
-		decoder := json.NewDecoder(resp.Body)
+		scanner := bufio.NewScanner(resp.Body)
+		for scanner.Scan() {
+			line := scanner.Text()
 
-		for {
+			if !strings.HasPrefix(line, "data: ") {
+				continue
+			}
+
+			data := strings.TrimPrefix(line, "data: ")
+			if data == "[DONE]" {
+				break
+			}
+
 			var chunk StreamChunk
-			if err := decoder.Decode(&chunk); err != nil {
+			if err := json.Unmarshal([]byte(data), &chunk); err != nil {
+				chunks <- StreamChunk{Err: fmt.Errorf("unmarshal chunk : %w", err)}
 				return
 			}
 
 			select {
 			case <-ctx.Done():
+				chunks <- StreamChunk{Err: ctx.Err()}
 				return
 			case chunks <- chunk:
 			}
 		}
+
+		if err := scanner.Err(); err != nil {
+			chunks <- StreamChunk{Err: fmt.Errorf("stream scan: %w", err)}
+		}
+
 	}()
 
 	return chunks, nil
