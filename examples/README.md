@@ -28,7 +28,7 @@ func main() {
         cencori.WithAPIKey(os.Getenv("CENCORI_API_KEY")),
     )
     
-    resp, err := client.Chat.Chat(context.Background(), cencori.*ChatParams{
+    resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
         Model: "gpt-4o",
         Messages: []cencori.Message{
             {Role: "user", Content: "Hello!"},

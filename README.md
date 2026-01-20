@@ -44,7 +44,7 @@ func main() {
         log.Fatal(err)
     }
     
-    resp, err := client.Chat.Chat(context.Background(), cencori.*ChatParams{
+    resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
         Model: "gpt-4o",
         Messages: []cencori.Message{
             {Role: "user", Content: "Hello!"},
@@ -84,7 +84,7 @@ go run examples/01-basic-chat/main.go
 
 ```go
 // Non-streaming
-resp, err := client.Chat.Chat(ctx, cencori.*ChatParams{
+resp, err := client.Chat.Chat(ctx, &cencori.ChatParams{
     Model: "gpt-4o",
     Messages: []cencori.Message{
         {Role: "user", Content: "Hello"},
@@ -92,7 +92,7 @@ resp, err := client.Chat.Chat(ctx, cencori.*ChatParams{
 })
 
 // Streaming
-stream, err := client.Chat.Stream(ctx, cencori.*ChatParams{
+stream, err := client.Chat.Stream(ctx, &cencori.ChatParams{
     Model: "gpt-4o",
     Messages: messages,
 })
