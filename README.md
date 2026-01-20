@@ -238,7 +238,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Support
 
-- 📚 [Documentation](https://docs.cencori.com)
-- 💬 [Discord](https://discord.gg/cencori)
+- 📚 [Documentation](https://cencori.com/docs)
 - 🐛 [Issues](https://github.com/DanielPopoola/cencori-go/issues)
-- 📧 [Email](mailto:support@cencori.com)
