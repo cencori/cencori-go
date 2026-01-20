@@ -19,7 +19,7 @@ func main() {
 	}
 
 	// Simple chat completion
-	resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
+	resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{Role: "system", Content: "You are a helpful assistant."},

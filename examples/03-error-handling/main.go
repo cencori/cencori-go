@@ -20,7 +20,7 @@ func main() {
 	}
 
 	// Attempt chat with comprehensive error handling
-	resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
+	resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{Role: "user", Content: "Hello!"},

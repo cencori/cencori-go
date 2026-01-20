@@ -28,7 +28,7 @@ func main() {
         cencori.WithAPIKey(os.Getenv("CENCORI_API_KEY")),
     )
     
-    resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
+    resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
         Model: "gpt-4o",
         Messages: []cencori.Message{
             {Role: "user", Content: "Hello!"},
@@ -46,37 +46,35 @@ func main() {
 ## Examples by Category
 
 ### Chat API
-- **[basic.go](chat/basic.go)** - Simple chat completion
-- **[streaming.go](chat/streaming.go)** - Real-time streaming responses
-- **[error_handling.go](chat/error_handling.go)** - Comprehensive error handling
-- **[advanced.go](chat/advanced.go)** - All parameters (temperature, max_tokens, etc.)
+- **[01-basic-chat](01-basic-chat/main.go)** - Simple chat completion
+- **[02-streaming](02-streaming/main.go)** - Real-time streaming
+- **[03-error-handling](03-error-handling/main.go)** - Robust error handling
+- **[04-advanced-params](04-advanced-params/main.go)** - All parameters
+- **[10-completions](10-completions/main.go)** - Text completion
+- **[11-embeddings](11-embeddings/main.go)** - Vector embeddings & semantic search
+
 
 ### Projects Management
-- **[projects.go](projects/projects.go)** - CRUD operations for projects
-- **[lifecycle.go](projects/lifecycle.go)** - Complete project lifecycle
+- **[05-projects](05-projects/main.go)** - Project management
 
 ### API Keys
-- **[rotation.go](api_keys/rotation.go)** - Production key rotation pattern
-- **[monitoring.go](api_keys/monitoring.go)** - Track key usage and stats
+- **[06-key-rotation](06-key-rotation/main.go)** - API key rotation
 
 ### Metrics & Analytics
-- **[dashboard.go](metrics/dashboard.go)** - Custom analytics dashboard
-- **[alerts.go](metrics/alerts.go)** - Cost and performance alerting
+- **[07-metrics](07-metrics/main.go)** - Analytics dashboard
 
 ### Advanced Patterns
-- **[context.go](advanced/context.go)** - Timeouts and cancellation
-- **[multi_provider.go](advanced/multi_provider.go)** - Compare providers/models
-- **[retry.go](advanced/retry.go)** - Robust retry logic
-- **[concurrent.go](advanced/concurrent.go)** - Parallel requests
+- **[08-context-timeout](08-context-timeout/main.go)** - Context patterns
+- **[09-multi-provider](09-multi-provider/main.go)** - Provider comparison
 
 ## Running Examples
 
 ```bash
 # Run specific example
-go run examples/chat/basic.go
+go run examples/01-basic-chat/main.go
 
 # Run with race detector
-go run -race examples/chat/streaming.go
+go run -race examples/02-streaming/main.go
 
 # Run all examples
 for f in examples/**/*.go; do go run "$f"; done
@@ -89,7 +87,7 @@ for f in examples/**/*.go; do go run "$f"; done
 ```go
 import "errors"
 
-_, err := client.Chat.Chat(ctx, params)
+_, err := client.Chat.Create(ctx, params)
 if err != nil {
     switch {
     case errors.Is(err, cencori.ErrInvalidAPIKey):
@@ -126,7 +124,7 @@ for chunk := range stream {
 ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 defer cancel()
 
-resp, err := client.Chat.Chat(ctx, params)
+resp, err := client.Chat.Create(ctx, params)
 // Request auto-cancelled after 10s
 ```
 

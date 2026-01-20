@@ -24,7 +24,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	resp, err := client.Chat.Chat(ctx, &cencori.ChatParams{
+	resp, err := client.Chat.Create(ctx, &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{Role: "user", Content: "What is AI?"},
@@ -85,7 +85,7 @@ func main() {
 	// Cancel parent immediately
 	parentCancel()
 
-	_, err = client.Chat.Chat(parentCtx, &cencori.ChatParams{
+	_, err = client.Chat.Create(parentCtx, &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{Role: "user", Content: "Hello"},
@@ -102,7 +102,7 @@ func main() {
 	deadlineCtx, deadlineCancel := context.WithDeadline(context.Background(), deadline)
 	defer deadlineCancel()
 
-	_, err = client.Chat.Chat(deadlineCtx, &cencori.ChatParams{
+	_, err = client.Chat.Create(deadlineCtx, &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{Role: "user", Content: "Quick question"},

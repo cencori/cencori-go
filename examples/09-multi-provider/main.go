@@ -44,7 +44,7 @@ func main() {
 	for _, model := range models {
 		start := time.Now()
 
-		resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
+		resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
 			Model: model,
 			Messages: []cencori.Message{
 				{Role: "user", Content: prompt},

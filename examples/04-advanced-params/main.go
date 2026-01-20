@@ -23,7 +23,7 @@ func main() {
 	topP := 0.9
 	userID := "user-123"
 
-	resp, err := client.Chat.Chat(context.Background(), &cencori.ChatParams{
+	resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
 		Model: "gpt-4o",
 		Messages: []cencori.Message{
 			{
