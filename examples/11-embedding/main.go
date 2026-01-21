@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/DanielPopoola/cencori-go"
+	"github.com/cencori/cencori-go"
 )
 
 func main() {

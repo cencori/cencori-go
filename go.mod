@@ -1,3 +1,3 @@
-module github.com/DanielPopoola/cencori-go
+module github.com/cencori/cencori-go
 
 go 1.25.4

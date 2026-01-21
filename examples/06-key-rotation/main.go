@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/DanielPopoola/cencori-go"
+	"github.com/cencori/cencori-go"
 )
 
 func main() {

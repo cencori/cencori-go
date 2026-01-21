@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/DanielPopoola/cencori-go"
+	"github.com/cencori/cencori-go"
 )
 
 func main() {

@@ -1,8 +1,8 @@
 # Cencori Go SDK
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/DanielPopoola/cencori-go.svg)](https://pkg.go.dev/github.com/DanielPopoola/cencori-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/DanielPopoola/cencori-go)](https://goreportcard.com/report/github.com/DanielPopoola/cencori-go)
-[![CI](https://github.com/DanielPopoola/cencori-go/workflows/Go/badge.svg)](https://github.com/DanielPopoola/cencori-go/actions)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cencori/cencori-go.svg)](https://pkg.go.dev/github.com/cencori/cencori-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cencori/cencori-go)](https://goreportcard.com/report/github.com/cencori/cencori-go)
+[![CI](https://github.com/cencori/cencori-go/workflows/Go/badge.svg)](https://github.com/cencori/cencori-go/actions)
 
 Official Go SDK for the Cencori AI API - unified access to OpenAI, Anthropic, and Google models with built-in security, logging, and cost tracking.
 
@@ -19,7 +19,7 @@ Official Go SDK for the Cencori AI API - unified access to OpenAI, Anthropic, an
 ## Installation
 
 ```bash
-go get github.com/DanielPopoola/cencori-go
+go get github.com/cencori/cencori-go
 ```
 
 ## Quick Start

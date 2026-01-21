@@ -6,7 +6,7 @@ Complete, production-ready examples for the Cencori Go SDK.
 
 ```bash
 export CENCORI_API_KEY="your-key-here"
-go get github.com/DanielPopoola/cencori-go
+go get github.com/cencori/cencori-go
 ```
 
 ## Quick Start
@@ -20,7 +20,7 @@ import (
     "log"
     "os"
     
-    "github.com/DanielPopoola/cencori-go"
+    "github.com/cencori/cencori-go"
 )
 
 func main() {

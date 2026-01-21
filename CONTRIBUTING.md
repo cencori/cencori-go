@@ -4,7 +4,7 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/DanielPopoola/cencori-go.git
+git clone https://github.com//cencori-go.git
 cd cencori-go
 ```
 
