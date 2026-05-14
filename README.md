@@ -28,10 +28,10 @@ go get github.com/cencori/cencori-go
 
 ```go
 client, _ := cencori.NewClient(
-    cencori.WithApiKey(os.Getenv("CENCORI_API_KEY")),
+    cencori.WithAPIKey(os.Getenv("CENCORI_API_KEY")),
 )
 
-resp, err := client.Chat.Create(context.Background(), cencori.ChatParams{
+resp, err := client.Chat.Create(context.Background(), &cencori.ChatParams{
     Model: "gpt-4o",
     Messages: []cencori.Message{
         {Role: "user", Content: "Hello!"},
@@ -75,11 +75,9 @@ See [examples/](examples/) for complete, runnable examples:
 - **[10-completions](examples/10-completions/)** - Text completions
 
 ### Embeddings
-- **[11-embeddings](examples/11-embeddings/)** - Vector embeddings & semantic search
+- **[11-embedding](examples/11-embedding/)** - Vector embeddings & semantic search
 
-### Management
-- **[05-projects](examples/05-projects/)** - Project management
-- **[06-key-rotation](examples/06-key-rotation/)** - API key rotation
+### Metrics
 - **[07-metrics](examples/07-metrics/)** - Analytics dashboard
 
 ### Advanced
@@ -97,7 +95,7 @@ go run examples/01-basic-chat/main.go
 
 ```go
 // Conversational chat
-resp, err := client.Chat.Create(ctx, cencori.ChatParams{
+resp, err := client.Chat.Create(ctx, &cencori.ChatParams{
     Model: "gpt-4o",
     Messages: []cencori.Message{
         {Role: "system", Content: "You are helpful"},
@@ -112,7 +110,7 @@ resp, err := client.Chat.Completions(ctx, cencori.CompletionParams{
 })
 
 // Streaming
-stream, err := client.Chat.Stream(ctx, cencori.ChatParams{...})
+stream, err := client.Chat.Stream(ctx, &cencori.ChatParams{...})
 for chunk := range stream {
     if chunk.Err != nil {
         log.Fatal(chunk.Err)
@@ -142,31 +140,11 @@ for i, data := range resp.Data {
 }
 ```
 
-### Projects API
+### Project and API Key Setup
 
-```go
-// List projects
-projects, err := client.Projects.List(ctx, "org-slug")
+Create projects, generate API keys, and configure provider access in the Cencori dashboard. Public Go SDK usage starts after you have a project secret key (`csk_...`) in `CENCORI_API_KEY`.
 
-// Create project
-project, err := client.Projects.Create(ctx, "org-slug", cencori.CreateProjectParams{
-    Name:        "My Project",
-    Description: "AI assistant",
-})
-```
-
-### API Keys API
-
-```go
-// List keys
-keys, err := client.APIKeys.List(ctx, "project-id", "production")
-
-// Create key
-key, err := client.APIKeys.Create(ctx, "project-id", cencori.CreateAPIKeyParams{
-    Name:        "Production Key",
-    Environment: "production",
-})
-```
+The `Projects` and `APIKeys` services are not part of the public runtime setup path. They target dashboard-management surfaces and should not be used from product integrations.
 
 ### Metrics API
 
@@ -187,7 +165,7 @@ import "errors"
 _, err := client.Chat.Chat(ctx, params)
 
 switch {
-case errors.Is(err, cencori.ErrInvalidApiKey):
+case errors.Is(err, cencori.ErrInvalidAPIKey):
     // Invalid API key
 case errors.Is(err, cencori.ErrRateLimited):
     // Rate limit exceeded

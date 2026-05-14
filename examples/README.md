@@ -51,14 +51,11 @@ func main() {
 - **[03-error-handling](03-error-handling/main.go)** - Robust error handling
 - **[04-advanced-params](04-advanced-params/main.go)** - All parameters
 - **[10-completions](10-completions/main.go)** - Text completion
-- **[11-embeddings](11-embeddings/main.go)** - Vector embeddings & semantic search
+- **[11-embedding](11-embedding/main.go)** - Vector embeddings & semantic search
 
 
-### Projects Management
-- **[05-projects](05-projects/main.go)** - Project management
-
-### API Keys
-- **[06-key-rotation](06-key-rotation/main.go)** - API key rotation
+### Dashboard Management
+Project creation and API-key rotation are dashboard setup tasks, not part of the public runtime integration path. Use the Cencori dashboard to create projects, generate keys, and configure provider access.
 
 ### Metrics & Analytics
 - **[07-metrics](07-metrics/main.go)** - Analytics dashboard
