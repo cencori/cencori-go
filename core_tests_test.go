@@ -194,12 +194,18 @@ func TestCompletions_Success(t *testing.T) {
 			ID: "cmpl-123",
 			Choices: []struct {
 				Index        int     `json:"index"`
-				Message      Message `json:"message"`
+				Message      struct {
+					Content   string     `json:"content"`
+					ToolCalls []ToolCall `json:"tool_calls,omitempty"`
+				} `json:"message"`
 				FinishReason string  `json:"finish_reason"`
 			}{
 				{
-					Index:        0,
-					Message:      Message{Role: "assistant", Content: "Completion response"},
+					Index: 0,
+					Message: struct {
+						Content   string     `json:"content"`
+						ToolCalls []ToolCall `json:"tool_calls,omitempty"`
+					}{Content: "Completion response"},
 					FinishReason: "stop",
 				},
 			},

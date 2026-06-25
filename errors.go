@@ -28,6 +28,8 @@ func (e *APIError) fillSentinel() {
 	switch e.Code {
 	case "INVALID_API_KEY":
 		e.Err = ErrInvalidAPIKey
+	case "SECURITY_VIOLATION", "SAFETY_VIOLATION":
+		e.Err = ErrSafetyViolation
 	case "RATE_LIMIT_EXCEEDED":
 		e.Err = ErrRateLimited
 	case "INSUFFICIENT_CREDITS":
@@ -46,6 +48,7 @@ func (e *APIError) fillSentinel() {
 var (
 	ErrInvalidAPIKey       = errors.New("INVALID_API_KEY")
 	ErrSecurityViolation   = errors.New("SECURITY_VIOLATION")
+	ErrSafetyViolation     = errors.New("SAFETY_VIOLATION")
 	ErrRateLimited         = errors.New("RATE_LIMIT_EXCEEDED")
 	ErrInsufficientCredits = errors.New("INSUFFICIENT_CREDITS")
 	ErrTierRestricted      = errors.New("TIER_RESTRICTED")
@@ -53,3 +56,17 @@ var (
 	ErrProvider            = errors.New("PROVIDER_ERROR")
 	ErrContentFiltered     = errors.New("CONTENT_FILTERED")
 )
+
+// SafetyError holds the reasons for a safety violation.
+type SafetyError struct {
+	Message string
+	Reasons []string
+}
+
+func (e *SafetyError) Error() string {
+	return fmt.Sprintf("cencori: safety violation: %s (reasons: %v)", e.Message, e.Reasons)
+}
+
+func NewSafetyError(message string, reasons []string) error {
+	return &SafetyError{Message: message, Reasons: reasons}
+}
