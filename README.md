@@ -63,6 +63,35 @@ resp, err := client.Chat.Embeddings(context.Background(), cencori.EmbeddingParam
 })
 ```
 
+### Vision (Image Understanding)
+
+Analyze, describe, OCR, and classify images. Routes across OpenAI, Anthropic, and Google vision-capable models.
+
+```go
+// General analysis with a custom prompt
+result, err := client.Vision.Analyze(context.Background(), &cencori.VisionParams{
+    ImageURL: "https://example.com/photo.jpg",
+    Prompt:   "What breed of dog is this?",
+})
+fmt.Println(result.Analysis)
+
+// OCR from a local file
+data, _ := os.ReadFile("receipt.png")
+ocr, _ := client.Vision.OCR(context.Background(), &cencori.VisionParams{
+    ImageBase64: base64.StdEncoding.EncodeToString(data),
+    MimeType:    "image/png",
+})
+fmt.Println(ocr.Text)
+
+// Structured classification
+c, _ := client.Vision.Classify(context.Background(), &cencori.VisionParams{
+    ImageURL: "https://example.com/product.jpg",
+})
+// c.Classification is a map[string]any when the model returns valid JSON
+```
+
+Full API in [docs](https://cencori.com/docs/ai/endpoints/vision).
+
 ## Examples
 
 See [examples/](examples/) for complete, runnable examples:
