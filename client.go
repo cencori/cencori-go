@@ -31,6 +31,7 @@ type Client struct {
 
 	Chat      *ChatService
 	Vision    *VisionService
+	Documents *DocumentsService
 	Projects  *ProjectsService
 	APIKeys   *APIKeysService
 	Metrics   *MetricsService
@@ -68,6 +69,7 @@ func NewClient(opts ...Option) (*Client, error) {
 
 	c.Chat = &ChatService{client: c}
 	c.Vision = &VisionService{client: c}
+	c.Documents = &DocumentsService{client: c}
 	c.Projects = &ProjectsService{client: c}
 	c.APIKeys = &APIKeysService{client: c}
 	c.Metrics = &MetricsService{client: c}

@@ -11,8 +11,15 @@ type VisionService struct {
 	client *Client
 }
 
+// VisionImage is a single image entry for multi-image requests.
+type VisionImage struct {
+	URL      string `json:"url,omitempty"`
+	Base64   string `json:"base64,omitempty"`
+	MimeType string `json:"mime_type,omitempty"`
+}
+
 // VisionParams is the request payload for any Vision endpoint.
-// Provide exactly one of ImageURL or ImageBase64 (with MimeType).
+// Provide one of ImageURL, ImageBase64+MimeType, or Images.
 type VisionParams struct {
 	// ImageURL is an http(s):// or data: URL pointing to the image.
 	ImageURL string `json:"image_url,omitempty"`
@@ -20,6 +27,8 @@ type VisionParams struct {
 	ImageBase64 string `json:"image_base64,omitempty"`
 	// MimeType is required when using ImageBase64 (e.g. "image/png").
 	MimeType string `json:"mime_type,omitempty"`
+	// Images is a list of images to analyze together (multi-image mode).
+	Images []VisionImage `json:"images,omitempty"`
 	// Prompt overrides the default task prompt. Only meaningful for Analyze.
 	Prompt string `json:"prompt,omitempty"`
 	// Model overrides the default (gpt-4o-mini). See GET /api/ai/vision for the list.
@@ -120,8 +129,8 @@ func validateVisionParams(params *VisionParams) error {
 	if params == nil {
 		return errors.New("vision params required")
 	}
-	if params.ImageURL == "" && params.ImageBase64 == "" {
-		return errors.New("vision request requires ImageURL or ImageBase64")
+	if params.ImageURL == "" && params.ImageBase64 == "" && len(params.Images) == 0 {
+		return errors.New("vision request requires ImageURL, ImageBase64, or Images")
 	}
 	return nil
 }
