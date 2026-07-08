@@ -92,6 +92,33 @@ c, _ := client.Vision.Classify(context.Background(), &cencori.VisionParams{
 
 Full API in [docs](https://cencori.com/docs/ai/endpoints/vision).
 
+### Documents (PDF & Image Extraction)
+
+Extract text from PDFs and images, summarize, and answer questions. Text-based PDFs use native parsing — no LLM tokens.
+
+```go
+// Extract text (native PDF parse — free)
+result, _ := client.Documents.Extract(context.Background(), &cencori.DocumentParams{
+    DocumentURL: "https://example.com/contract.pdf",
+})
+fmt.Println(result.Method) // 'pdf_text' — no LLM cost
+
+// Summarize
+summary, _ := client.Documents.Summarize(context.Background(), &cencori.DocumentParams{
+    DocumentURL: "https://example.com/report.pdf",
+})
+fmt.Println(summary.Summary)
+
+// Q&A — strict "Not found" if answer isn't present
+answer, _ := client.Documents.Query(context.Background(), &cencori.DocumentParams{
+    DocumentURL: "https://example.com/contract.pdf",
+    Question:    "What is the termination clause?",
+})
+fmt.Println(answer.Answer)
+```
+
+Full API in [docs](https://cencori.com/docs/ai/endpoints/documents).
+
 ## Examples
 
 See [examples/](examples/) for complete, runnable examples:
