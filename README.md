@@ -14,6 +14,7 @@ Official Go SDK for the Cencori - unified access to OpenAI, Anthropic, and Googl
 - **Built-in security** - Automatic PII detection and content filtering
 - **Complete analytics** - Token usage and cost tracking
 - **Streaming support** - Real-time response streaming
+- **Web intelligence** - First-party fetch, extraction, crawl, and evidence-bearing search
 - **Type-safe** - Full Go type safety with generics
 
 ## Installation
@@ -118,6 +119,35 @@ fmt.Println(answer.Answer)
 ```
 
 Full API in [docs](https://cencori.com/docs/ai/endpoints/documents).
+
+### Web Search and Retrieval
+
+Search the public Cencori corpus, extract a public page, or build a private project corpus:
+
+```go
+results, err := client.Web.Search(context.Background(), &cencori.WebSearchParams{
+    Query: "PostgreSQL row-level locking",
+    Limit: 10,
+})
+if err != nil {
+    log.Fatal(err)
+}
+for _, result := range results.Results {
+    fmt.Println(result.Title, result.CanonicalURL, result.Evidence.Quote)
+}
+
+page, err := client.Web.Extract(context.Background(), &cencori.WebFetchParams{
+    URL: "https://www.postgresql.org/docs/current/explicit-locking.html",
+})
+
+crawl, err := client.Web.Crawl(context.Background(), &cencori.WebCrawlParams{
+    Seeds:    []string{"https://docs.example.com/"},
+    MaxPages: 100,
+    MaxDepth: 2,
+})
+```
+
+Fetched page content is marked as untrusted input. Search results include evidence quotations, retrieval timestamps, and content hashes for citation workflows.
 
 ## Examples
 
