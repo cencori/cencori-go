@@ -40,6 +40,7 @@ type Client struct {
 	Memory    *MemoryService
 	Sessions  *SessionsService
 	Telemetry *TelemetryService
+	Web       *WebService
 	Compute   *ComputeService
 	Workflow  *WorkflowService
 	Storage   *StorageService
@@ -79,6 +80,7 @@ func NewClient(opts ...Option) (*Client, error) {
 	c.Memory = &MemoryService{client: c}
 	c.Sessions = &SessionsService{client: c}
 	c.Telemetry = &TelemetryService{client: c}
+	c.Web = &WebService{client: c}
 	c.Compute = &ComputeService{client: c}
 	c.Workflow = &WorkflowService{client: c}
 	c.Storage = &StorageService{client: c, Vectors: &VectorsSubmodule{client: c}}
